@@ -94,7 +94,7 @@ func TestGetInterval(t *testing.T) {
 		case i%2 != 0:
 			expCategory = pomodoro.CategoryPomodoro
 			expDuration = 3 * duration
-		case 1%8 == 0:
+		case i%8 == 0:
 			expCategory = pomodoro.CategoryLongBreak
 			expDuration = 2 * duration
 		case i%2 == 0:
@@ -102,7 +102,7 @@ func TestGetInterval(t *testing.T) {
 			expDuration = duration
 		}
 
-		testName := fmt.Sprintf("%s%d", expCategory, i)
+		testName := fmt.Sprintf("%s: %d", expCategory, i)
 		t.Run(testName, func(t *testing.T) {
 			res, err := pomodoro.GetInterval(config)
 
