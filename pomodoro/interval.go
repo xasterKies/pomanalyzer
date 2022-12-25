@@ -116,7 +116,16 @@ func nextCategory(r Repository) (string, error) {
 
 type Callback func(Interval)
 
+// Controls the interval timer
 func tick(ctx context.Context, id int64, config *IntervalConfig,
 		start, periodic, end Callback) error {
 			
+			ticker := time.NewTicker(time.Second)
+			defer ticker.Stop()
+
+			i, err := config.repo.ByID(id)
+			if err != nil {
+				
+			}
+
 		}
