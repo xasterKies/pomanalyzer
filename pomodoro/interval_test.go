@@ -94,7 +94,14 @@ func TestGetInterval(t *testing.T) {
 		
 		switch {
 		case i%2 != 0:
-			exp
+			expCategory = pomodoro.CategoryPomodoro
+			expDuration = 3 * duration
+		case i%8 == 0:
+			expCategory = pomodoro.CategoryLongBreak
+			expDuration = 2 * duration
+		case i%2 == 0:
+			expCategory = pomodoro.CategoryShortBreak
+			expDuration = duration
 		}
 	}
 }
