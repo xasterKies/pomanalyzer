@@ -103,5 +103,26 @@ func TestGetInterval(t *testing.T) {
 			expCategory = pomodoro.CategoryShortBreak
 			expDuration = duration
 		}
+
+		testName := fmt.Sprintf("%s%d", expCategory, i)
+		t.Run(testName, func(t *testing.T) {
+			res, err := pomodoro.GetInterval(config)
+
+			if err != nil {
+				t.Errorf("Expected no error, got %q. \n", err)
+			}
+
+			noop := func(pomodoro.Interval) {}
+
+			if err := res.Start(context.Background(), config, noop,
+			 noop, noop); err != nil {
+				t.Fatal(err)
+			 }
+
+			if res.Category != expCategory {
+				t.Errorf("Expected category %q, got %q.\n",
+					expCategory, res.Category)
+			}
+		})
 	}
 }
