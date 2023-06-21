@@ -18,6 +18,7 @@ func NewInMemoryRepo() *inMemoryRepo {
 	}
 }
 
+// Creates/save a new interval in the data store
 func (r *inMemoryRepo) Create(i pomodoro.Interval) (int64, error) {
 	r.Lock()
 	defer r.Unlock()
@@ -29,6 +30,7 @@ func (r *inMemoryRepo) Create(i pomodoro.Interval) (int64, error) {
 	return i.ID, nil
 }
 
+// Updates details about an interval in the data store.
 func (r *inMemoryRepo) Update(i pomodoro.Interval) error {
 	r.Lock()
 	defer r.Unlock()
@@ -40,6 +42,7 @@ func (r *inMemoryRepo) Update(i pomodoro.Interval) error {
 	return nil
 }
 
+// Retrieves a specific interval from the data store by its ID
 func (r *inMemoryRepo) ByID(id int64) (pomodoro.Interval, error) {
 	r.RLock()
 	defer r.RUnlock()
@@ -51,6 +54,7 @@ func (r *inMemoryRepo) ByID(id int64) (pomodoro.Interval, error) {
 	return i, nil
 }
 
+// Retrieves the last interval from the data store
 func (r *inMemoryRepo) Last() (pomodoro.Interval, error) {
 	r.RLock()
 	defer r.RUnlock()
@@ -62,6 +66,7 @@ func (r *inMemoryRepo) Last() (pomodoro.Interval, error) {
 	return r.intervals[len(r.intervals)-1], nil
 }
 
+// Retrieves a given number of interval items from the data store that matches CategoryLongBreak or CategoryShortBreak
 func(r *inMemoryRepo) Breaks(n int) ([]pomodoro.Interval, error) {
 	r.RLock()
 	defer r.RUnlock()
