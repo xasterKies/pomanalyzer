@@ -3,6 +3,7 @@ package pomodoro
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -89,7 +90,7 @@ func NewConfig(repo Repository, pomodoro, shortBreak, longBreak time.Duration) *
 // Pomodoro interval, there’s a short break, and after four Pomodoros, there’s
 // a long break.
 func nextCategory(r Repository) (string, error) {
-	li, err := r.Last()
+	li, err := r.Last() // Last interval
 	if err != nil && err == ErrNoIntervals {
 		return CategoryPomodoro, nil
 	}
@@ -172,4 +173,89 @@ func tick(ctx context.Context, id int64, config *IntervalConfig,
 				return config.repo.Update(i)
 		}
 	}
+}
+
+// This function gets an instance of the intervalConfig and returns a new Interval instance with the appropriate
+// category and values
+func newInterval(config *IntervalConfig) (Interval, error) {
+	i := Interval{}
+	category, err := nextCategory(config.repo)
+	if err != nil {
+		return i, err
 	}
+
+	i.Category = category
+
+	switch category {
+	case CategoryPomodoro:
+		i.PlannedDuration = config.PomodoroDuration
+	case CategoryShortBreak:
+		i.PlannedDuration = config.ShortBreakDuration
+	case CategoryLongBreak:
+		i.PlannedDuration = config.LongBreakDuration
+	}
+
+	if i.ID, err = config.repo.Create(i); err != nil {
+		return i, err
+	}
+
+	return i, nil
+}
+
+//========================== API for interval type ==========================
+
+// Gets Interval - This function gets an instance of IntervalConfig as input, and returns either 
+//an instance of the Interval type or an error
+func GetInterval(config *IntervalConfig) (Interval, error) {
+	i := Interval{}
+	var err error
+
+	i, err = config.repo.Last()
+	if err != nil && err != ErrNoIntervals {
+		return i, err
+	}
+
+	if err == nil && i.State != StateCancelled && i.State != StateDone {
+		return i, nil
+	}
+
+	return newInterval(config)
+}
+
+// This method is used to start the interval timer. - it checks the state of the current interval setting the appropriate options
+// and then calls the tick() function to time the interval
+func (i Interval) Start(ctx context.Context, config *IntervalConfig,
+		start, periodic, end Callback) error {
+	
+		switch i.State {
+		case StateRunning:
+			return nil
+		case StateNotStarted:
+			i.StartTime = time.Now()
+			fallthrough
+		case StatePaused:
+			i.State = StateRunning
+			if err := config.repo.Update(i); err != nil {
+				return err
+			}
+			return tick(ctx, i.ID, config, start, periodic, end)
+		case StateCancelled, StateDone:
+			return fmt.Errorf("%w: Cannot start", ErrIntervalCompleted)
+		default: 
+			return fmt.Errorf("%w: %d", ErrInvalidState, i.State)
+		}
+}
+
+// This method is used to pause a running interval.
+func (i Interval) Pause(config *IntervalConfig) error {
+	if i.State != StateRunning {
+		return ErrIntervalNotRunning
+	}
+
+	i.State = StatePaused
+
+	return config.repo.Update(i)
+}
+
+
+
