@@ -35,11 +35,12 @@ type Interval struct {
 
 // Defining repository pattern for storing data
 type Repository interface {
-	Create(i Interval) (int64, error)
-	Update(i Interval) error
-	ByID(id int64) (Interval, error)
-	Last() (Interval, error)
-	Breaks(n int) ([]Interval, error)
+	Create(i Interval) (int64, error) // Creates/save a new interval in the data store
+	Update(i Interval) error // Updates details about an interval in the data store.
+	ByID(id int64) (Interval, error) // Retrieves a specific interval from the data store by its ID
+	Last() (Interval, error) // Retrieves the last interval from the data store
+	// Retrieves a given number of interval items from the data store that matches CategoryLongBreak or CategoryShortBreak
+	Breaks(n int) ([]Interval, error) 
 }
 
 // Representing particular errors app may return
