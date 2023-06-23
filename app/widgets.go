@@ -10,37 +10,37 @@ import (
 )
 
 type widgets struct {
-	donTimer	*donut.Donut
-	disType		*segmentdisplay.SegmentDisplay
-	txtInfo		*text.Text
-	txtTimer	*text.Text
-	updateDonTimer	chan []int
-	updateTxtInfo	chan string
-	updateTxtTimer	chan string
-	updateTxtType	chan string
+	donTimer       *donut.Donut
+	disType        *segmentdisplay.SegmentDisplay
+	txtInfo        *text.Text
+	txtTimer       *text.Text
+	updateDonTimer chan []int
+	updateTxtInfo  chan string
+	updateTxtTimer chan string
+	updateTxtType  chan string
 }
 
 func (w *widgets) update(timer []int, txtType, txtInfo, txtTimer string,
 	redrawCh chan<- bool) {
 
-		if txtInfo != "" {
-			w.updateTxtInfo <- txtInfo
-		}
-
-		if txtType != "" {
-			w.updateTxtType <- txtType
-		}
-
-		if txtTimer != "" {
-			w.updateTxtTimer <- txtTimer
-		}
-
-		if len(timer) > 0 {
-			w.updateDonTimer <- timer
-		}
-
-		redrawCh <- true
+	if txtInfo != "" {
+		w.updateTxtInfo <- txtInfo
 	}
+
+	if txtType != "" {
+		w.updateTxtType <- txtType
+	}
+
+	if txtTimer != "" {
+		w.updateTxtTimer <- txtTimer
+	}
+
+	if len(timer) > 0 {
+		w.updateDonTimer <- timer
+	}
+
+	redrawCh <- true
+}
 
 func newWidgets(ctx context.Context, errorCh chan<- error) (*widgets, error) {
 	w := &widgets{}
@@ -49,7 +49,7 @@ func newWidgets(ctx context.Context, errorCh chan<- error) (*widgets, error) {
 	w.updateDonTimer = make(chan []int)
 	w.updateTxtType = make(chan string)
 	w.updateTxtInfo = make(chan string)
-	w.updateTxtTimer =  make(chan string)
+	w.updateTxtTimer = make(chan string)
 
 	w.donTimer, err = newDonut(ctx, w.updateDonTimer, errorCh)
 	if err != nil {
@@ -74,78 +74,78 @@ func newWidgets(ctx context.Context, errorCh chan<- error) (*widgets, error) {
 	return w, nil
 }
 
-func newText(ctx context.Context, updateText <- chan string,
+func newText(ctx context.Context, updateText <-chan string,
 	errorCh chan<- error) (*text.Text, error) {
-		txt, err := text.New()
-		if err != nil {
-			return nil, err
-		}
+	txt, err := text.New()
+	if err != nil {
+		return nil, err
+	}
 
-		go func() {
-			for {
-				select {
-				case t := <-updateText:
-					txt.Reset()
-					errorCh <- txt.Write(t)
-				case <-ctx.Done():
-					return
-				}
+	go func() {
+		for {
+			select {
+			case t := <-updateText:
+				txt.Reset()
+				errorCh <- txt.Write(t)
+			case <-ctx.Done():
+				return
 			}
-		}()
+		}
+	}()
 
-		return txt, nil
+	return txt, nil
 }
 
 func newDonut(ctx context.Context, donUpdater <-chan []int,
 	errorCh chan<- error) (*donut.Donut, error) {
-		don, err := donut.New(
-			donut.Clockwise(),
-			donut.CellOpts(cell.FgColor(cell.ColorBlue)),
-		)
+	don, err := donut.New(
+		donut.Clockwise(),
+		donut.CellOpts(cell.FgColor(cell.ColorBlue)),
+	)
 
-		if err != nil {
-			return nil, err
-		}
-
-		go func() {
-			for {
-				select {
-				case d := <-donUpdater:
-					if d[0] <= d[1] {
-						errorCh <- don.Absolute(d[0], d[1])
-					}
-				case <-ctx.Done():
-					return
-				}
-			}
-		}()
-
-		return don, nil
+	if err != nil {
+		return nil, err
 	}
 
-func newSegmentDisplay(ctx context.Context, updateText <-chan string, 
+	go func() {
+		for {
+			select {
+			case d := <-donUpdater:
+				if d[0] <= d[1] {
+					errorCh <- don.Absolute(d[0], d[1])
+				}
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+
+	return don, nil
+}
+
+func newSegmentDisplay(ctx context.Context, updateText <-chan string,
 	errorCh chan<- error) (*segmentdisplay.SegmentDisplay, error) {
-		sd, err := segmentdisplay.New()
-		if err != nil {
-			return nil, err
-		}
-
-		// Goroutine to update SegmentDisplay
-		go func() {
-			for {
-				select {
-				case t := <-updateText:
-					if t == "" {
-						t = " "
-					}
-
-					errorCh <- sd.Write([]*segmentdisplay.TextChunk{
-						segmentdisplay.NewChunk(t),
-					})
-				case <-ctx.Done():
-					return
-				}
-			}
-		}()
-		return sd, nil
+	sd, err := segmentdisplay.New()
+	if err != nil {
+		return nil, err
 	}
+
+	// Goroutine to update SegmentDisplay
+	go func() {
+		for {
+			select {
+			case t := <-updateText:
+				if t == "" {
+					t = " "
+				}
+
+				errorCh <- sd.Write([]*segmentdisplay.TextChunk{
+					segmentdisplay.NewChunk(t),
+				})
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+	return sd, nil
+}
