@@ -6,7 +6,7 @@ import (
 	"github.com/mum4k/termdash/cell"
 	"github.com/mum4k/termdash/widgets/donut"
 	"github.com/mum4k/termdash/widgets/segmentdisplay"
-	"github.com/mum/termdash/widgets/text"
+	"github.com/mum4k/termdash/widgets/text"
 )
 
 type widgets struct {
@@ -73,3 +73,79 @@ func newWidgets(ctx context.Context, errorCh chan<- error) (*widgets, error) {
 
 	return w, nil
 }
+
+func newText(ctx context.Context, updateText <- chan string,
+	errorCh chan<- error) (*text.Text, error) {
+		txt, err := text.New()
+		if err != nil {
+			return nil, err
+		}
+
+		go func() {
+			for {
+				select {
+				case t := <-updateText:
+					txt.Reset()
+					errorCh <- txt.Write(t)
+				case <-ctx.Done():
+					return
+				}
+			}
+		}()
+
+		return txt, nil
+}
+
+func newDonut(ctx context.Context, donUpdater <-chan []int,
+	errorCh chan<- error) (*donut.Donut, error) {
+		don, err := donut.New(
+			donut.Clockwise(),
+			donut.CellOpts(cell.FgColor(cell.ColorBlue)),
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		go func() {
+			for {
+				select {
+				case d := <-donUpdater:
+					if d[0] <= d[1] {
+						errorCh <- don.Absolute(d[0], d[1])
+					}
+				case <-ctx.Done():
+					return
+				}
+			}
+		}()
+
+		return don, nil
+	}
+
+func newSegmentDisplay(ctx context.Context, updateText <-chan string, 
+	errorCh chan<- error) (*segmentdisplay.SegmentDisplay, error) {
+		sd, err := segmentdisplay.New()
+		if err != nil {
+			return nil, err
+		}
+
+		// Goroutine to update SegmentDisplay
+		go func() {
+			for {
+				select {
+				case t := <-updateText:
+					if t == "" {
+						t = " "
+					}
+
+					errorCh <- sd.Write([]*segmentdisplay.TextChunk{
+						segmentdisplay.NewChunk(t),
+					})
+				case <-ctx.Done():
+					return
+				}
+			}
+		}()
+		return sd, nil
+	}
