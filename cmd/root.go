@@ -58,7 +58,7 @@ func Execute() {
 
 func init() {
 	
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.pomanalyzer.yaml)")
+	//rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.pomanalyzer.yaml)")
 
 	rootCmd.Flags().DurationP("pomo", "p", 25*time.Minute, "Pomodoro duration")
 	rootCmd.Flags().DurationP("short", "s", 5*time.Minute, "Short break duration")
@@ -68,10 +68,6 @@ func init() {
 	viper.BindPFlag("short", rootCmd.Flags().Lookup("short"))
 	viper.BindPFlag("long", rootCmd.Flags().Lookup("long"))
 
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 
