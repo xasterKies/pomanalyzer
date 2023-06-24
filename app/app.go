@@ -52,7 +52,8 @@ func New(config *pomodoro.IntervalConfig) (*App, error) {
 		return nil, err
 	}
 
-	controller, err := termdash.NewController(term, c, termdash.KeyboardSubscriber((quitter)))
+	controller, err := termdash.NewController(term, c,
+		termdash.KeyboardSubscriber((quitter)))
 	if err != nil {
 		return nil, err
 	}

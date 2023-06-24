@@ -15,10 +15,11 @@ func newGrid(b *buttonSet, w *widgets,
 		// Add first row
 		builder.Add(
 			grid.RowHeightPerc(30, 
-				grid.ColWidthFixedWithOpts(30, []container.Option{
-					container.Border(linestyle.Light),
-					container.BorderTitle("Press Q to Quit"),
-				},
+				grid.ColWidthPercWithOpts(30,
+					[]container.Option{
+						container.Border(linestyle.Light),
+						container.BorderTitle("Press Q to Quit"),
+					},
 				grid.RowHeightPerc(80,
 					grid.Widget(w.donTimer)),
 					grid.RowHeightPercWithOpts(20,
