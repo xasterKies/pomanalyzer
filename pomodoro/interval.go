@@ -52,3 +52,41 @@ type IntervalConfig struct {
 	ShortBreakDuration time.Duration
 	LongBreakDuration  time.Duration
 }
+
+func NewConfig(repo Repository, pomodoro, shortBreak, longBreak time.Duration) *IntervalConfig {
+	
+	c := &IntervalConfig{
+		repo: repo,
+		PomodoroDuration: 25 * time.Minute,
+		ShortBreakDuration: 5 * time.Minute,
+		LongBreakDuration: 15 * time.Minute,
+	}
+
+	if pomodoro > 0 {
+		c.PomodoroDuration = pomodoro
+	}
+
+	if shortBreak > 0 {
+		c.ShortBreakDuration = shortBreak
+	}
+
+	if longBreak > 0 {
+		c.LongBreakDuration = longBreak
+	}
+
+	return c
+}
+
+func nextCategory(r Repository) (string, error) {
+	li, err := r.Last()
+
+	if err != nil && err == ErrNoIntervals {
+		return CategoryPomodoro, nil
+	}
+	if err != nil {
+		return "", err
+	}
+	if li.Category == CategoryLongBreak || li.Category == CategoryShortBreak {
+		return CategoryPomodoro, nil
+	}
+}
