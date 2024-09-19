@@ -89,4 +89,21 @@ func nextCategory(r Repository) (string, error) {
 	if li.Category == CategoryLongBreak || li.Category == CategoryShortBreak {
 		return CategoryPomodoro, nil
 	}
+
+	lastBreaks, err := r.Breaks(3)
+	if err != nil {
+		return "", err
+	}
+
+	if len(lastBreaks) < 3 {
+		return CategoryShortBreak, nil
+	}
+
+	for _, i := range lastBreaks {
+		if i.Category == CategoryLongBreak {
+			return CategoryShortBreak, nil
+		}
+	}
+
+	return CategoryLongBreak, nil
 }
