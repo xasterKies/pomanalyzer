@@ -1,6 +1,7 @@
 package pomodoro
 
 import (
+	"context"
 	"errors"
 	"time"
 )
@@ -107,3 +108,88 @@ func nextCategory(r Repository) (string, error) {
 
 	return CategoryLongBreak, nil
 }
+
+type Callback func(Interval)
+
+func tick(ctx context.Context, id int64, config *IntervalConfig, start, periodic, end Callback) error {
+
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
+
+	i, err := config.repo.ById(id)
+	if err != nil {
+		return err
+	}
+
+	expire := time.After(i.PlannedDuration - i.ActualDuration)
+
+	start(i)
+
+	for {
+		select {
+		case <-ticker.C:
+			i, err := config.repo.ById(id)
+			if err != nil {
+				return err
+			}
+
+			if i.State == StatePaused {
+				return nil
+			}
+
+			i.ActualDuration += time.Second
+			if err := config.repo.Update(i); err != nil {
+				return err
+			}
+			periodic(i)
+		case <-expire:
+			i, err := config.repo.ById(id)
+			if err != nil {
+				return err
+			}
+			i.State = StateDone
+			end(i)
+			return config.repo.Update(i)
+		}
+
+	}
+}
+
+func newInterval(config *IntervalConfig) (Interval, error) {
+	i := Interval{}
+	category, err := nextCategory(config.repo)
+	if err != nil {
+		return i, err
+	}
+
+	i.Category = category
+
+	switch category {
+	case CategoryPomodoro:
+		i.PlannedDuration = config.PomodoroDuration
+	case CategoryShortBreak:
+		i.PlannedDuration = config.ShortBreakDuration
+	case CategoryLongBreak:
+		i.PlannedDuration = config.LongBreakDuration
+	}
+
+	if i.ID, err = config.repo.Create(i); err != nil {
+		return i, err
+	}
+
+	return i, nil
+}
+
+func GetInterval(config *IntervalConfig) (Interval, error) {
+	i := Interval{}
+	var err error
+
+	i, err = config.repo.Last()
+
+	if err != nil && i.State != StateCancelled && i.State != StateDone {
+		return i, nil
+	}
+
+	return newInterval(config)
+}
+
