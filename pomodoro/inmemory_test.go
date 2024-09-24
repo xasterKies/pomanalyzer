@@ -1,3 +1,5 @@
+// +build inmemory
+
 package pomodoro_test
 
 import (
