@@ -9,8 +9,8 @@
 I have always used the pomodoro technique to track the way I study and focus on my current tasks. I have been keeping track of this with a pomodoro mobile app that I use for my study sessions but over time I always get distracted because of notifications on my device. Thats when I had the idea what if I could do all that without using my phone. I started searching for alternatives and all I saw were browser extensions but I wanted something that will be rid of all distractions, so i started building this tool that works only in the terminal... an undistractable space.
 
 ![most language](https://img.shields.io/github/languages/top/xasterKies/pomanalyzer?color=blue&style=for-the-badge)
-![stars](https://img.shields.io/github/stars/xasterKies/pomanalyzer?color=green&style=for-the-badge)
-![Contributors](https://img.shields.io/github/contributors/xasterKies/pomanalyzer?color=green&style=for-the-badge)
+![stars](https://img.shields.io/github/stars/xasterKies/pomanalyzer?color=blue&style=for-the-badge)
+![Contributors](https://img.shields.io/github/contributors/xasterKies/pomanalyzer?color=blue&style=for-the-badge)
 
 
 ## Tech Stack
