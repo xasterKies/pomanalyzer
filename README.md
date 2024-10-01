@@ -56,13 +56,15 @@ Each study session counts for `25 minutes`. After a study session you get a shor
     go get ./...
     ```
 
-2. Start the project (in root of the project folder)
+2. Clear Database
+
+3. Start the project (in root of the project folder)
 
    ```bash
    go build
    ```
 
-2. Run CLI build
+4. Run CLI build
 
    ```bash
    ./pomanalyzer
