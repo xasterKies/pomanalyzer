@@ -57,8 +57,15 @@ Each study session counts for `25 minutes`. After a study session you get a shor
     ```
 
 2. Clear Database
-- Make the script executable by running chmod ```bash +x clear_db.sh``` if you are running Linux or MacOS
-- Run the script with ```bash ./clear_db.sh```
+  - Make the script executable by running chmod if you are running Linux or MacOS
+
+    ```bash
+    chmod +x clear_db.sh```
+    
+  - Run the script with
+  
+    ```bash
+     ./clear_db.sh```
 
 3. Start the project (in root of the project folder)
 
