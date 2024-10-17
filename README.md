@@ -89,4 +89,4 @@ Each study session counts for `25 minutes`. After a study session you get a shor
 ## Contributing
 if you have any issues running it or will like to make a contribute/suggest anything to the project, will be happy to hear from you in issues or PRs section :)
 
-If you find a typo help me fix it... Thanks!
+If you find a typo please help me fix it... Thanks!
