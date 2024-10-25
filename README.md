@@ -1,5 +1,5 @@
 # 🍎📈 pomanalyzer
-> A CLI that tracks your study time and analyze historical data of it with interactive charts in your terminal using the [pomodoro](https://en.wikipedia.org/wiki/Pomodoro_Technique) technique.
+> A CLI that tracks your study time and analyzes historical data of it with interactive charts in your terminal using the [pomodoro](https://en.wikipedia.org/wiki/Pomodoro_Technique) technique.
 
 
 ![Alt text](./pomanalyzer.png "pomanalyzer CLI")
