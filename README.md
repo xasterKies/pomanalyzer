@@ -84,7 +84,7 @@ Each study session counts for `25 minutes`. After a study session you get a shor
 ## Future works
 - [ ] Integrate a light weight notification library like ([notif](https://github.com/xasterKies/notif)) for audio notification for each study session.
 - [ ] Cross-build and cross-compilation of application on various platforms.
-- [ ] Building and distributing the application with a Docker.
+- [ ] Building and distributing the application with Docker.
 
 ## Contributing
 if you have any issues running it or will like to make a contribute/suggest anything to the project, will be happy to hear from you in issues or PRs section :)
