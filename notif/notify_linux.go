@@ -1,12 +1,15 @@
 package notif
 
-import "os/exec"
+import (
+	"os/exec"
+)
 
 var command = exec.Command
 
 // Send notification for linux system
 func (n *Notify) Send() error {
 	notifCmdName := "notify-send"
+	soundFile := "/usr/share/sounds/Yaru/stereo/message-new-instant.oga"
 
 	notifCmd, err := exec.LookPath(notifCmdName)
 
@@ -16,5 +19,19 @@ func (n *Notify) Send() error {
 
 	notifCommand := command(notifCmd, "-u", n.severity.String(), n.title, n.message)
 
-	return notifCommand.Run()
+	if err := notifCommand.Run(); err != nil {
+		return err
+	}
+
+	// Check if `paplay` is available; otherwise, use `ogg123`
+	soundCmdName, err := exec.LookPath("paplay")
+	if err != nil {
+		soundCmdName, err = exec.LookPath("ogg123")
+		if err != nil {
+			return nil
+		}
+	}
+
+	soundCommand := exec.Command(soundCmdName, soundFile)
+	return soundCommand.Run()
 }
