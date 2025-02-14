@@ -173,7 +173,7 @@ func tick(ctx context.Context, id int64, config *IntervalConfig,
 
 		var message string
 
-		if i.State != StatePaused {
+		if i.State == StateDone {
 			if i.Category == CategoryPomodoro {
 				message = "Time to take a break. Start break timer."
 			} else {
