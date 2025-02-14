@@ -63,22 +63,22 @@ func NewConfig(repo Repository, pomodoro, shortBreak,
 
 	c := &IntervalConfig{
 		repo:               repo,
-		PomodoroDuration:   3 * time.Minute,
-		ShortBreakDuration: 1 * time.Minute,
-		LongBreakDuration:  2 * time.Minute,
+		PomodoroDuration:   25 * time.Minute,
+		ShortBreakDuration: 5 * time.Minute,
+		LongBreakDuration:  15 * time.Minute,
 	}
 
-	// if pomodoro > 0 {
-	// 	c.PomodoroDuration = pomodoro
-	// }
+	if pomodoro > 0 {
+		c.PomodoroDuration = pomodoro
+	}
 
-	// if shortBreak > 0 {
-	// 	c.ShortBreakDuration = shortBreak
-	// }
+	if shortBreak > 0 {
+		c.ShortBreakDuration = shortBreak
+	}
 
-	// if longBreak > 0 {
-	// 	c.LongBreakDuration = longBreak
-	// }
+	if longBreak > 0 {
+		c.LongBreakDuration = longBreak
+	}
 
 	return c
 }
