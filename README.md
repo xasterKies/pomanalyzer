@@ -82,7 +82,7 @@ Each study session counts for `25 minutes`. After a study session you get a shor
    ```
 
 ## Future works
-- [ ] Integrate a light weight notification library like ([notif](https://github.com/xasterKies/notif)) for audio notification for each pomanalyzer study session.
+- [x] Integrate a light weight notification library like ([notif](https://github.com/xasterKies/notif)) for audio notification for each pomanalyzer study session.
 - [ ] Cross-build and cross-compilation of application on various platforms.
 - [ ] Building and distributing the application with Docker.
 
