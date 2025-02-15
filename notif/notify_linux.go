@@ -9,7 +9,7 @@ var command = exec.Command
 // Send notification for linux system
 func (n *Notify) Send() error {
 	notifCmdName := "notify-send"
-	soundFile := "/usr/share/sounds/Yaru/stereo/message-new-instant.oga"
+	soundFile := "sounds/message-new-instant.oga"
 
 	notifCmd, err := exec.LookPath(notifCmdName)
 
