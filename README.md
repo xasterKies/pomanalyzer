@@ -1,3 +1,5 @@
+
+
 # 🍎📈 pomanalyzer
 > A CLI that tracks your study time and analyzes historical data of it with interactive charts in your terminal using the [pomodoro](https://en.wikipedia.org/wiki/Pomodoro_Technique) technique.
 
@@ -22,7 +24,7 @@ Go, TermDash, Cobra, SQLite
 - Visualize summary of your weekly study trend with Line charts.
 
 ## How it works
-Each study session counts for `25 minutes`. After a study session you get a short break for `5 minutes`. After a total of 4 study sessions you get a long break of `15 minutes`, after which you can restart a study session. All your study data is stored in an SQLite Database.
+Each study session counts for `25 minutes`. After a study session you get a short break for `5 minutes`. After a total of 4 study sessions you get a long break of `15 minutes`, after which you can restart a study session. All your study data is stored in an SQLite Database. The default durations can be changed with the `-p`, `-s`, and `-l` flags or a `.pomo.yaml` config file.
 
 
 ## Prerequisites
